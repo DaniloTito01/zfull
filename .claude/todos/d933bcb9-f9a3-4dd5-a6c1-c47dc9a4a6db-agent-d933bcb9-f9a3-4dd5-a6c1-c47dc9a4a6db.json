@@ -1,0 +1,27 @@
+[
+  {
+    "content": "Criar schema completo PostgreSQL no backend",
+    "status": "in_progress",
+    "activeForm": "Criando schema completo PostgreSQL no backend"
+  },
+  {
+    "content": "Implementar endpoints CRUD básicos",
+    "status": "pending",
+    "activeForm": "Implementando endpoints CRUD básicos"
+  },
+  {
+    "content": "Conectar frontend com backend real",
+    "status": "pending",
+    "activeForm": "Conectando frontend com backend real"
+  },
+  {
+    "content": "Remover mock data do frontend",
+    "status": "pending",
+    "activeForm": "Removendo mock data do frontend"
+  },
+  {
+    "content": "Testar integração completa",
+    "status": "pending",
+    "activeForm": "Testando integração completa"
+  }
+]

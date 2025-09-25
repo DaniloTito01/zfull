@@ -1,0 +1,50 @@
+# Stack com Sistema de Logging Integrado - 23/09/2025 19:47
+version: '3.8'
+
+services:
+  frontend:
+    image: zbarbe-frontend:logging-system-20250923-194453
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=/api
+      - NODE_ENV=production
+      - VITE_LOG_LEVEL=INFO
+    volumes:
+      - logs_volume:/app/logs
+
+  backend:
+    image: zbarbe-backend:logging-permissions-20250923-1952
+    ports:
+      - "3001:3001"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br:8080
+      - LOG_DIR=/app/logs
+      - LOG_LEVEL=INFO
+    volumes:
+      - logs_volume:/app/logs
+
+volumes:
+  logs_volume:
+    driver: local

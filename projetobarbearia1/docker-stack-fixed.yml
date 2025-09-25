@@ -1,0 +1,61 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:fix-20250924-195719
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    environment:
+      - VITE_API_BASE=https://zbarbe.zenni-ia.com.br/api
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+      - "traefik.http.routers.zbarbe-frontend-http.entrypoints=web"
+      - "traefik.http.routers.zbarbe-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.tls=true"
+      - "traefik.http.routers.zbarbe-frontend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+
+  backend:
+    image: zbarbe-backend:production-20250924-192331
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+    environment:
+      - DB_HOST=5.78.113.107
+      - DB_PORT=5432
+      - DB_NAME=barber_system
+      - DB_USER=postgres
+      - DB_PASSWORD=Mfcd62!!Mfcd62!!SaaS
+      - JWT_SECRET=super-secret-jwt-key-for-production-change-this-immediately
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+      - FRONTEND_URL=https://zbarbe.zenni-ia.com.br

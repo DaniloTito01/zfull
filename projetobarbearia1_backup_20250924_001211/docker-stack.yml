@@ -1,0 +1,108 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:${VERSION:-latest}
+    networks:
+      - network_public
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    environment:
+      - VITE_API_BASE=https://zbarbe.zenni-ia.com.br/api
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "traefik.enable=true"
+      # HTTP router for ACME challenge
+      - "traefik.http.routers.zbarbe-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend-http.entrypoints=web"
+      # HTTPS router
+      - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-frontend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
+
+  backend:
+    image: zbarbe-backend:${VERSION:-latest}
+    networks:
+      - network_public
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - TZ=America/Campo_Grande
+      # Database configuration (set these via docker secret or environment)
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      # JWT configuration
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=24h
+      # CORS configuration
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.enable=true"
+      # HTTP router for ACME challenge
+      - "traefik.http.routers.zbarbe-backend-http.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.zbarbe-backend-http.entrypoints=web"
+      # HTTPS router
+      - "traefik.http.routers.zbarbe-backend.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.zbarbe-backend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-backend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.zbarbe-backend.loadbalancer.server.port=3001"
+      - "traefik.docker.network=network_public"

@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Deploy com script automatizado",
+    "status": "completed",
+    "activeForm": "Fazendo deploy com script automatizado"
+  },
+  {
+    "content": "Verificar e corrigir certificado SSL",
+    "status": "in_progress",
+    "activeForm": "Verificando e corrigindo certificado SSL"
+  },
+  {
+    "content": "Testar sistema em produção",
+    "status": "pending",
+    "activeForm": "Testando sistema em produção"
+  }
+]

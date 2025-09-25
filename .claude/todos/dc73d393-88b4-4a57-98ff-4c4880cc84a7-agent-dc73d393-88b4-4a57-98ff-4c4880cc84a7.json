@@ -1,0 +1,22 @@
+[
+  {
+    "content": "Criar estrutura do banco de dados Supabase",
+    "status": "in_progress",
+    "activeForm": "Criando estrutura do banco de dados Supabase"
+  },
+  {
+    "content": "Implementar CRUD backend para todos os módulos",
+    "status": "pending",
+    "activeForm": "Implementando CRUD backend para todos os módulos"
+  },
+  {
+    "content": "Atualizar frontend para usar APIs reais",
+    "status": "pending",
+    "activeForm": "Atualizando frontend para usar APIs reais"
+  },
+  {
+    "content": "Testar funcionalidades CRUD completas",
+    "status": "pending",
+    "activeForm": "Testando funcionalidades CRUD completas"
+  }
+]

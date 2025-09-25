@@ -1,0 +1,10 @@
+ID             NAME                      MODE         REPLICAS   IMAGE                                         PORTS
+uhlp25hx9jnq   dashboard-demo_backend    replicated   1/1        dashboard-backend:latest                      
+f5v5b19o95ri   dashboard-demo_frontend   replicated   1/1        dashboard-frontend:latest                     
+brwdfr8blfw6   portainer_agent           global       1/1        portainer/agent:2.21.4                        
+s5rf9gap7ktf   portainer_portainer       replicated   1/1        portainer/portainer-ce:2.21.4                 
+owe802iljmd6   postgres_postgres         replicated   1/1        astraonline/postgrespgvector:2025             *:5432->5432/tcp
+sq42z4zh1qfk   redis_redis               replicated   1/1        redis:latest                                  
+m7g7n4086mia   traefik_traefik           replicated   1/1        traefik:2.11.2                                
+lp49sil384ri   zbarbe_zbarbe-backend     replicated   1/1        zbarbe-backend:debug-20250924-001237          
+iadsyidv0tm2   zbarbe_zbarbe-frontend    replicated   1/1        zbarbe-frontend:clients-fix-20250924-011422   

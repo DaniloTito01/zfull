@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Zbarba
 =======
 # 🏆 Sistema de Barbearia - ZBarbe
@@ -518,3 +519,6 @@ Desenvolvido com ❤️ usando tecnologias de ponta para revolucionar a gestão 
 *Última atualização: 23 de Setembro de 2025*
 *Versão: sistema-completo-20250923-153000*
 >>>>>>> c9963aa (Primeiro commit do projeto barbearia)
+=======
+# zfull
+>>>>>>> 6fecff4 (Dump inicial do /root (sanitizado))

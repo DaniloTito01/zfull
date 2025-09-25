@@ -1,0 +1,47 @@
+# Stack com acesso direto via porta para contornar problema do Traefik
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-fixed-20250923-183549
+    networks:
+      - network_public
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=http://zbarbe.zenni-ia.com.br:3001
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=false"
+
+  backend:
+    image: zbarbe-backend:production-fixed-20250923-183549
+    networks:
+      - network_public
+    ports:
+      - "3001:3001"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br:8080
+    labels:
+      - "traefik.enable=false"

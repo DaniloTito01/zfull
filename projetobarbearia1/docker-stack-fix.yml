@@ -1,0 +1,64 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:sistema-bugfix-20250923-142723
+    networks:
+      - network_public
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=https://zbarbe.zenni-ia.com.br/api
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+      - "traefik.http.routers.zbarbe-frontend-http.entrypoints=web"
+      - "traefik.http.routers.zbarbe-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+
+  backend:
+    image: zbarbe-backend:sistema-bugfix-20250923-142723
+    networks:
+      - network_public
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DB_HOST=5.78.113.107
+      - DB_PORT=5432
+      - DB_NAME=barber_system
+      - DB_USER=postgres
+      - DB_PASSWORD=Mfcd62!!Mfcd62!!SaaS
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+      - "traefik.http.routers.zbarbe-backend-http.entrypoints=web"
+      - "traefik.http.routers.zbarbe-backend-http.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.zbarbe-backend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-backend.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.zbarbe-backend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.zbarbe-backend.loadbalancer.server.port=3001"

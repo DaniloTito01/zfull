@@ -1,0 +1,42 @@
+[
+  {
+    "content": "Analisar arquitetura atual do sistema multi-tenant",
+    "status": "in_progress",
+    "activeForm": "Analisando arquitetura atual do sistema multi-tenant"
+  },
+  {
+    "content": "Criar sistema de autenticação por barbearia",
+    "status": "pending",
+    "activeForm": "Criando sistema de autenticação por barbearia"
+  },
+  {
+    "content": "Implementar isolamento completo de dados entre barbearias",
+    "status": "pending",
+    "activeForm": "Implementando isolamento completo de dados entre barbearias"
+  },
+  {
+    "content": "Criar painel Super Admin para gerenciar barbearias",
+    "status": "pending",
+    "activeForm": "Criando painel Super Admin para gerenciar barbearias"
+  },
+  {
+    "content": "Ajustar middleware de autenticação no backend",
+    "status": "pending",
+    "activeForm": "Ajustando middleware de autenticação no backend"
+  },
+  {
+    "content": "Modificar todas as queries para incluir filtro por barbearia",
+    "status": "pending",
+    "activeForm": "Modificando todas as queries para incluir filtro por barbearia"
+  },
+  {
+    "content": "Criar tela de login específica por barbearia",
+    "status": "pending",
+    "activeForm": "Criando tela de login específica por barbearia"
+  },
+  {
+    "content": "Testar isolamento completo entre barbearias",
+    "status": "pending",
+    "activeForm": "Testando isolamento completo entre barbearias"
+  }
+]

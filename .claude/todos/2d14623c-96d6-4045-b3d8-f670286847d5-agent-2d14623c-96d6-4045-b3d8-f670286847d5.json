@@ -1,0 +1,22 @@
+[
+  {
+    "content": "Analisar todos os logs do sistema",
+    "status": "in_progress",
+    "activeForm": "Analisando logs completos do sistema"
+  },
+  {
+    "content": "Identificar erros encontrados",
+    "status": "pending",
+    "activeForm": "Identificando erros"
+  },
+  {
+    "content": "Mapear erros por componente/tela",
+    "status": "pending",
+    "activeForm": "Mapeando erros por componente"
+  },
+  {
+    "content": "Preparar relatório de erros",
+    "status": "pending",
+    "activeForm": "Preparando relatório de erros"
+  }
+]

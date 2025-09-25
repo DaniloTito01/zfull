@@ -1,0 +1,65 @@
+# Stack temporário apenas HTTP para correção
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-swarm-20250923-181154
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    environment:
+      - VITE_API_BASE=http://api.zbarbe.zenni-ia.com.br
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.temp-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.temp-frontend.entrypoints=web"
+      - "traefik.http.services.temp-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
+
+  backend:
+    image: zbarbe-backend:production-swarm-20250923-181154
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.temp-backend.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.temp-backend.entrypoints=web"
+      - "traefik.http.services.temp-backend.loadbalancer.server.port=3001"
+      - "traefik.docker.network=network_public"

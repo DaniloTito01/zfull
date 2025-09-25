@@ -1,0 +1,22 @@
+[
+  {
+    "content": "Verificar se o novo build foi aplicado corretamente",
+    "status": "in_progress",
+    "activeForm": "Verificando se o novo build foi aplicado corretamente"
+  },
+  {
+    "content": "Forçar limpar cache do browser/CDN",
+    "status": "pending",
+    "activeForm": "Forçando limpar cache do browser/CDN"
+  },
+  {
+    "content": "Confirmar que API_BASE está vazio no código deployado",
+    "status": "pending",
+    "activeForm": "Confirmando que API_BASE está vazio no código deployado"
+  },
+  {
+    "content": "Testar tela de Clientes após correção",
+    "status": "pending",
+    "activeForm": "Testando tela de Clientes após correção"
+  }
+]

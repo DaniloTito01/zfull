@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: barbershop-frontend:latest
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.barbershop-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbershop-frontend.entrypoints=websecure"
+        - "traefik.http.routers.barbershop-frontend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.barbershop-frontend.loadbalancer.server.port=80"
+        - "traefik.docker.network=network_public"
+
+  backend:
+    image: barbershop-backend:latest
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_HOST=5.78.113.107
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=Mfcd62!!Mfcd62!!SaaS
+      - POSTGRES_DATABASE=barbearia
+      - POSTGRES_PORT=5432
+      - JWT_SECRET=your-super-secret-jwt-key-here
+      - PORT=3001
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.barbershop-backend.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbershop-backend.entrypoints=websecure"
+        - "traefik.http.routers.barbershop-backend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.barbershop-backend.loadbalancer.server.port=3001"
+        - "traefik.docker.network=network_public"
+
+networks:
+  network_public:
+    external: true

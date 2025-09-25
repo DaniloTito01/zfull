@@ -1,0 +1,117 @@
+# ==============================================================================
+# DOCKER SWARM STACK - SISTEMA ZBARBE PRODUÇÃO
+# ==============================================================================
+# Stack configurado para Docker Swarm com Traefik
+# Frontend: zbarbe.zenni-ia.com.br
+# Backend: api.zbarbe.zenni-ia.com.br
+
+version: '3.8'
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
+networks:
+  network_public:
+    external: true
+
+# ==============================================================================
+# SERVICES
+# ==============================================================================
+services:
+
+  # ============================================================================
+  # FRONTEND SERVICE
+  # ============================================================================
+  frontend:
+    image: zbarbe-frontend:${VERSION:-latest}
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    environment:
+      - VITE_API_BASE=https://api.zbarbe.zenni-ia.com.br
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      # HTTP router for ACME challenge
+      - "traefik.http.routers.swarm-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.swarm-frontend-http.entrypoints=web"
+      # HTTPS router
+      - "traefik.http.routers.swarm-frontend-https.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.swarm-frontend-https.entrypoints=websecure"
+      - "traefik.http.routers.swarm-frontend-https.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.swarm-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
+
+  # ============================================================================
+  # BACKEND SERVICE
+  # ============================================================================
+  backend:
+    image: zbarbe-backend:${VERSION:-latest}
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+    environment:
+      # Database
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - SUPABASE_URL=https://your-project.supabase.co
+      - SUPABASE_ANON_KEY=your-anon-key
+      - SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+      # Security
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      # Server
+      - PORT=3001
+      - NODE_ENV=production
+      # CORS configuration
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+    labels:
+      - "traefik.enable=true"
+      # HTTP router for ACME challenge
+      - "traefik.http.routers.swarm-backend-http.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.swarm-backend-http.entrypoints=web"
+      # HTTPS router
+      - "traefik.http.routers.swarm-backend-https.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.swarm-backend-https.entrypoints=websecure"
+      - "traefik.http.routers.swarm-backend-https.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.swarm-backend.loadbalancer.server.port=3001"
+      - "traefik.docker.network=network_public"

@@ -1,0 +1,64 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  zbarbe-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: zbarbe-frontend:pdv-api-fix-20250924-004759
+    container_name: zbarbe-frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_BASE=https://zbarbe.zenni-ia.com.br/api
+      - NODE_ENV=production
+    networks:
+      - network_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-frontend.tls.certresolver=myresolver"
+      - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
+    depends_on:
+      - zbarbe-backend
+
+  zbarbe-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    image: zbarbe-backend:debug-20250924-001237
+    container_name: zbarbe-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - TZ=America/Campo_Grande
+      # Database configuration
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      # JWT configuration
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=24h
+      # CORS configuration
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+    networks:
+      - network_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zbarbe-backend.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.zbarbe-backend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-backend.tls.certresolver=myresolver"
+      - "traefik.http.services.zbarbe-backend.loadbalancer.server.port=3001"
+      - "traefik.docker.network=network_public"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

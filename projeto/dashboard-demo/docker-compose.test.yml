@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: dashboard-frontend:latest
+    ports:
+      - "8081:80"
+    networks:
+      - network_public
+
+  backend:
+    image: dashboard-backend:latest
+    ports:
+      - "8082:3001"
+    networks:
+      - network_public
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+
+networks:
+  network_public:
+    external: true

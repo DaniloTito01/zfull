@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Implementar modals de CRUD para todas as telas",
+    "status": "completed",
+    "activeForm": "Implementando modals de CRUD"
+  },
+  {
+    "content": "Criar formulários funcionais com validação",
+    "status": "completed",
+    "activeForm": "Criando formulários funcionais"
+  },
+  {
+    "content": "Integrar todos os botões com APIs reais",
+    "status": "completed",
+    "activeForm": "Integrando botões com APIs"
+  },
+  {
+    "content": "Adicionar feedback visual (toasts, loading)",
+    "status": "completed",
+    "activeForm": "Adicionando feedback visual"
+  },
+  {
+    "content": "Fazer deploy final da versão funcional",
+    "status": "in_progress",
+    "activeForm": "Fazendo deploy da versão funcional"
+  },
+  {
+    "content": "Testar todas as funcionalidades end-to-end",
+    "status": "pending",
+    "activeForm": "Testando funcionalidades"
+  }
+]

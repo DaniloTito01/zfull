@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Implementar CRUD completo para todos os módulos pendentes",
+    "status": "in_progress",
+    "activeForm": "Implementando CRUD completo"
+  },
+  {
+    "content": "Criar testes unitários para frontend e backend",
+    "status": "pending",
+    "activeForm": "Criando testes unitários"
+  },
+  {
+    "content": "Implementar logs de monitoramento",
+    "status": "pending",
+    "activeForm": "Implementando logs de monitoramento"
+  },
+  {
+    "content": "Criar rollback menu principal",
+    "status": "pending",
+    "activeForm": "Criando rollback menu"
+  },
+  {
+    "content": "Build e deploy em produção sem cache",
+    "status": "pending",
+    "activeForm": "Fazendo build e deploy"
+  },
+  {
+    "content": "Atualizar toda documentação final",
+    "status": "pending",
+    "activeForm": "Atualizando documentação"
+  }
+]

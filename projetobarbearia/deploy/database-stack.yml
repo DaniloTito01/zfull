@@ -1,0 +1,116 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+  database_network:
+    driver: overlay
+    internal: true
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    networks:
+      - database_network
+    environment:
+      - POSTGRES_DB=barbershop
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=your_secure_password
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d barbershop"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PgAdmin para administração (opcional)
+  pgadmin:
+    image: dpage/pgadmin4:8
+    networks:
+      - database_network
+      - network_public
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@barbershop.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pgadmin.rule=Host(`db.zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.pgadmin.entrypoints=websecure"
+        - "traefik.http.routers.pgadmin.tls.certresolver=letsencrypt"
+        - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+    depends_on:
+      - postgres
+
+  # Adminer como alternativa leve ao PgAdmin
+  adminer:
+    image: adminer:4.8.1
+    networks:
+      - database_network
+      - network_public
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.adminer.rule=Host(`adminer.zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.adminer.entrypoints=websecure"
+        - "traefik.http.routers.adminer.tls.certresolver=letsencrypt"
+        - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+    depends_on:
+      - postgres
+
+  # Database Migrator (executa uma vez para criar as tabelas)
+  db-migrator:
+    image: postgres:15-alpine
+    networks:
+      - database_network
+    environment:
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGDATABASE=barbershop
+      - PGUSER=postgres
+      - PGPASSWORD=your_secure_password
+    volumes:
+      - ../database/supabase-schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: >
+      sh -c "
+        echo 'Aguardando PostgreSQL...' &&
+        until pg_isready -h postgres -p 5432 -U postgres; do
+          echo 'PostgreSQL não está pronto - aguardando...'
+          sleep 2
+        done &&
+        echo 'PostgreSQL está pronto!' &&
+        echo 'Executando migrations...' &&
+        psql -h postgres -U postgres -d barbershop -f /docker-entrypoint-initdb.d/init.sql &&
+        echo 'Migrations executadas com sucesso!'
+      "
+    deploy:
+      restart_policy:
+        condition: none
+      placement:
+        constraints:
+          - node.role == manager
+    depends_on:
+      - postgres

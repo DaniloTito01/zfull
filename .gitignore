@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -45,3 +46,50 @@ frontend/*.log
 # Coverage
 coverage/
 .nyc_output/
+=======
+# Segredos/credenciais
+.ssh/
+.gnupg/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.crt
+
+# Históricos e caches
+.bash_history
+.zsh_history
+.history
+.cache/
+.npm/
+.nvm/
+.docker/
+.kube/
+.config/*credentials*
+*.log
+
+# Git internos
+*/.git
+
+# Compilados/artefatos comuns
+node_modules/
+dist/
+build/
+coverage/
+__pycache__/
+*.pyc
+.venv/
+
+# Backups/pesados (ajuste conforme sua necessidade)
+*.tar
+*.tgz
+*.zip
+*.bak
+
+# SO/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+>>>>>>> 6fecff4 (Dump inicial do /root (sanitizado))

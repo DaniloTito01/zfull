@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Znexo Design System - Modern SaaS Premium */
+
+@layer base {
+  :root {
+    /* Znexo Brand Colors */
+    --background: 0 0% 100%; /* Branco Limpeza */
+    --foreground: 0 0% 5.1%; /* Preto Sofisticação */
+    
+    /* Znexo Core Colors */
+    --znexo-purple: 270 100% 50%; /* Roxo Criatividade #7F00FF */
+    --znexo-blue: 218 100% 50%; /* Azul Confiança #0057FF */
+    --znexo-black: 0 0% 5.1%; /* Preto Sofisticação #0D0D0D */
+    --znexo-white: 0 0% 100%; /* Branco Limpeza #FFFFFF */
+    --znexo-green: 98 100% 54%; /* Verde Neon CTA #39FF14 */
+    --znexo-orange: 16 100% 50%; /* Laranja Eletricidade #FF4500 */
+    
+    /* System Colors using Znexo Theme */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5.1%;
+
+    --primary: 270 100% 50%; /* Roxo Criatividade */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%; /* Cinza muito claro */
+    --secondary-foreground: 0 0% 5.1%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 270 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 270 100% 50%;
+
+    --radius: 1rem; /* radius-2xl para bordas arredondadas */
+
+    /* Sidebar Colors - Clean White Theme */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 5.1%;
+    --sidebar-primary: 270 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 5.1%;
+    --sidebar-border: 0 0% 89.8%;
+    --sidebar-ring: 270 100% 50%;
+
+    /* Znexo Gradients */
+    --gradient-purple: linear-gradient(135deg, hsl(var(--znexo-purple)), hsl(270 80% 60%));
+    --gradient-blue: linear-gradient(135deg, hsl(var(--znexo-blue)), hsl(218 80% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--znexo-purple)) 0%, hsl(var(--znexo-blue)) 100%);
+    
+    /* Shadows - Premium SaaS Style */
+    --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-medium: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-purple: 0 10px 30px -10px hsl(var(--znexo-purple) / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 240 6% 10%;
+    --foreground: 42 78% 95%;
+
+    --card: 240 6% 12%;
+    --card-foreground: 42 78% 95%;
+
+    --popover: 240 6% 12%;
+    --popover-foreground: 42 78% 95%;
+
+    --primary: 45 100% 51%;
+    --primary-foreground: 240 6% 10%;
+
+    --secondary: 240 6% 15%;
+    --secondary-foreground: 42 78% 95%;
+
+    --muted: 240 6% 15%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 6% 15%;
+    --accent-foreground: 42 78% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 45 100% 51%;
+
+    --sidebar-background: 240 6% 8%;
+    --sidebar-foreground: 42 78% 95%;
+    --sidebar-primary: 45 100% 51%;
+    --sidebar-primary-foreground: 240 6% 10%;
+    --sidebar-accent: 240 6% 12%;
+    --sidebar-accent-foreground: 42 78% 95%;
+    --sidebar-border: 240 6% 15%;
+    --sidebar-ring: 45 100% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  /* Znexo Card Styles - Premium SaaS */
+  .card-znexo {
+    @apply bg-white border border-border rounded-2xl;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+  }
+  
+  .card-znexo:hover {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  /* Znexo Gradients */
+  .gradient-purple {
+    background: var(--gradient-purple);
+  }
+  
+  .gradient-blue {
+    background: var(--gradient-blue);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  /* Znexo Button Variants */
+  .btn-cta {
+    @apply text-white font-semibold rounded-2xl px-6 py-3;
+    background: hsl(var(--znexo-green));
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-cta:hover {
+    background: hsl(98 100% 48%);
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary {
+    @apply text-white font-medium rounded-2xl px-4 py-2;
+    background: hsl(var(--znexo-blue));
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-secondary:hover {
+    background: hsl(218 100% 45%);
+  }
+  
+  .btn-alert {
+    @apply text-white font-medium rounded-2xl px-4 py-2;
+    background: hsl(var(--znexo-orange));
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-alert:hover {
+    background: hsl(16 100% 45%);
+  }
+  
+  /* Status Badges */
+  .badge-confirmed {
+    @apply text-white font-medium px-3 py-1 rounded-full text-xs;
+    background: hsl(var(--znexo-green));
+  }
+  
+  .badge-pending {
+    @apply text-white font-medium px-3 py-1 rounded-full text-xs;
+    background: hsl(var(--znexo-orange));
+  }
+  
+  .badge-completed {
+    @apply text-white font-medium px-3 py-1 rounded-full text-xs;
+    background: hsl(var(--znexo-purple));
+  }
+  
+  /* Typography */
+  .text-znexo-purple {
+    color: hsl(var(--znexo-purple));
+  }
+  
+  .text-znexo-blue {
+    color: hsl(var(--znexo-blue));
+  }
+  
+  .text-znexo-green {
+    color: hsl(var(--znexo-green));
+  }
+  
+  .text-znexo-orange {
+    color: hsl(var(--znexo-orange));
+  }
+  
+  /* Animation Classes */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

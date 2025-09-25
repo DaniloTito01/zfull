@@ -1,0 +1,148 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-20250924-192545
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: pause
+        monitor: 60s
+        max_failure_ratio: 0.3
+    environment:
+      - VITE_API_BASE=https://api.zbarbe.zenni-ia.com.br
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.zbarbe-frontend-http.entrypoints=web"
+      - "traefik.http.routers.zbarbe-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend-http.middlewares=redirect-to-https"
+
+      # HTTPS router
+      - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-frontend.tls=true"
+      - "traefik.http.routers.zbarbe-frontend.tls.certresolver=letsencryptresolver"
+
+      # Service
+      - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+
+      # Middleware for HTTPS redirect
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  backend:
+    image: zbarbe-backend:production-20250924-192331
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: pause
+        monitor: 60s
+        max_failure_ratio: 0.3
+    environment:
+      # Database Configuration
+      - DB_HOST=5.78.113.107
+      - DB_PORT=5432
+      - DB_NAME=barber_system
+      - DB_USER=postgres
+      - DB_PASSWORD=Mfcd62!!Mfcd62!!SaaS
+
+      # Security
+      - JWT_SECRET=super-secret-jwt-key-for-production-change-this-immediately
+      - BCRYPT_ROUNDS=12
+
+      # Application
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=https://zbarbe.zenni-ia.com.br
+      - FRONTEND_URL=https://zbarbe.zenni-ia.com.br
+
+      # Logging
+      - LOG_LEVEL=info
+      - LOG_FORMAT=json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.zbarbe-backend-http.entrypoints=web"
+      - "traefik.http.routers.zbarbe-backend-http.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-backend-http.middlewares=redirect-to-https"
+
+      # HTTPS router
+      - "traefik.http.routers.zbarbe-backend.entrypoints=websecure"
+      - "traefik.http.routers.zbarbe-backend.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.zbarbe-backend.tls=true"
+      - "traefik.http.routers.zbarbe-backend.tls.certresolver=letsencryptresolver"
+
+      # Service
+      - "traefik.http.services.zbarbe-backend.loadbalancer.server.port=3001"
+
+      # CORS Middleware (optional)
+      - "traefik.http.routers.zbarbe-backend.middlewares=cors"
+      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://zbarbe.zenni-ia.com.br"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

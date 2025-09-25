@@ -1,0 +1,78 @@
+# Stack com Nginx Proxy Reverso para resolver problema 404
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+  internal:
+    driver: overlay
+    internal: false
+
+services:
+  # Nginx Reverse Proxy
+  nginx-proxy:
+    image: nginx:alpine
+    networks:
+      - network_public
+      - internal
+    ports:
+      - "80:80"
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+    labels:
+      - "traefik.enable=false"
+
+  # Frontend Service
+  frontend:
+    image: zbarbe-frontend:production-fixed-20250923-183549
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=http://zbarbe.zenni-ia.com.br/api
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=false"
+
+  # Backend Service
+  backend:
+    image: zbarbe-backend:production-fixed-20250923-183549
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br
+    labels:
+      - "traefik.enable=false"
+
+configs:
+  nginx_config:
+    external: true

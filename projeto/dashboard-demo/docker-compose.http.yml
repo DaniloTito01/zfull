@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: dashboard-frontend:latest
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard-frontend-http.rule=Host(`projeto2.zenni-ia.com.br`)"
+        - "traefik.http.routers.dashboard-frontend-http.entrypoints=web"
+        - "traefik.http.services.dashboard-frontend-http.loadbalancer.server.port=80"
+      placement:
+        constraints:
+          - node.role == manager
+
+  backend:
+    image: dashboard-backend:latest
+    networks:
+      - network_public
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard-backend-http.rule=Host(`api.projeto2.zenni-ia.com.br`)"
+        - "traefik.http.routers.dashboard-backend-http.entrypoints=web"
+        - "traefik.http.services.dashboard-backend-http.loadbalancer.server.port=3001"
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  network_public:
+    external: true

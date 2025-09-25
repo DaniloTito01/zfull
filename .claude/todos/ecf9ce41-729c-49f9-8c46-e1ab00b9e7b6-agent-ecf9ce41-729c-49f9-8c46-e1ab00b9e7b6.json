@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Resolver 404 - configurar proxy direto",
+    "status": "in_progress",
+    "activeForm": "Resolvendo 404 - configurando proxy direto"
+  },
+  {
+    "content": "Testar acesso via domínio",
+    "status": "pending",
+    "activeForm": "Testando acesso via domínio"
+  },
+  {
+    "content": "Confirmar funcionamento completo",
+    "status": "pending",
+    "activeForm": "Confirmando funcionamento completo"
+  }
+]

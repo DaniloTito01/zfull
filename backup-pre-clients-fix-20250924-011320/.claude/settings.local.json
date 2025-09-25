@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//root/projetobarbearia /**)",
+      "Read(//root/projetobarbearia /backend/**)",
+      "Read(//root/projetobarbearia /frontend/src/lib/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

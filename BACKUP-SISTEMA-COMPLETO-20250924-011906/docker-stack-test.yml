@@ -1,0 +1,20 @@
+# Test stack - apenas HTTP para diagnóstico
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-swarm-20250923-181154
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.test-frontend.entrypoints=web"
+      - "traefik.http.services.test-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
