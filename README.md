@@ -14,11 +14,11 @@ Desenvolvido com tecnologias de ponta e funcionalidades profissionais.
 
 ## 🚀 Acesso Rápido
 
-**🌐 Ambiente de Produção:** https://zbarbe.zenni-ia.com.br/
+**🌐 Ambiente de Produção:** https://******.*******-ia.********.br/
 
 **🔐 Credenciais de Teste:**
-- **Email:** admin@teste.com
-- **Senha:** admin123
+- **Email:** ***********@teste.com
+- **Senha:** *************
 
 ---
 
