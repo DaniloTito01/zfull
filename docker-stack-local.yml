@@ -1,0 +1,52 @@
+version: '3.8'
+
+# Stack LOCAL para testes - SEM HTTPS, acesso direto por portas
+# Baseado na versão backup-working que funcionava 100%
+
+services:
+  frontend:
+    image: zbarbe-frontend:local-cors-fixed
+    ports:
+      - "9090:80"  # Acesso direto: http://localhost:9090
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    environment:
+      - VITE_API_BASE=http://localhost:3001
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
+  backend:
+    image: zbarbe-backend:clean-20250924-201648
+    ports:
+      - "3001:3001"  # Acesso direto: http://localhost:3001
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+    environment:
+      - DB_HOST=5.78.113.107
+      - DB_PORT=5432
+      - DB_NAME=barber_system
+      - DB_USER=postgres
+      - DB_PASSWORD=Mfcd62!!Mfcd62!!SaaS
+      - JWT_SECRET=super-secret-jwt-key-for-local-testing
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://localhost:9090
+      - FRONTEND_URL=http://localhost:9090

@@ -1,0 +1,87 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: barbe-frontend:20250921-163405
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.barbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbe-frontend.entrypoints=websecure"
+        - "traefik.http.routers.barbe-frontend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.barbe-frontend.loadbalancer.server.port=80"
+        - "traefik.http.routers.barbe-frontend-redirect.rule=Host(`zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbe-frontend-redirect.entrypoints=web"
+        - "traefik.http.routers.barbe-frontend-redirect.middlewares=https-redirect"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  backend:
+    image: barbe-backend:20250921-163405
+    networks:
+      - network_public
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - FRONTEND_URL=https://zbarbe.zenni-ia.com.br
+      - DB_HOST=5.78.113.107
+      - DB_PORT=5432
+      - DB_NAME=barber_system
+      - DB_USER=postgres
+      - DB_PASSWORD=${DB_PASSWORD}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.barbe-backend.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbe-backend.entrypoints=websecure"
+        - "traefik.http.routers.barbe-backend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.barbe-backend.loadbalancer.server.port=3001"
+        - "traefik.http.routers.barbe-backend-redirect.rule=Host(`api.zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.barbe-backend-redirect.entrypoints=web"
+        - "traefik.http.routers.barbe-backend-redirect.middlewares=https-redirect"
+        - "traefik.http.middlewares.backend-cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
+        - "traefik.http.middlewares.backend-cors.headers.accesscontrolallowheaders=*"
+        - "traefik.http.middlewares.backend-cors.headers.accesscontrolalloworiginlist=https://zbarbe.zenni-ia.com.br"
+        - "traefik.http.middlewares.backend-cors.headers.accesscontrolmaxage=100"
+        - "traefik.http.middlewares.backend-cors.headers.addvaryheader=true"
+        - "traefik.http.routers.barbe-backend.middlewares=backend-cors"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

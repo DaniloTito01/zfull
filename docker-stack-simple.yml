@@ -1,0 +1,59 @@
+# Stack simples sem conflitos de roteamento
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-fixed-20250923-183549
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=/api
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      # Configuração simplificada sem conflitos
+      - "traefik.http.routers.app.rule=Host(`zbarbe.zenni-ia.com.br`)"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.routers.app.priority=1"
+      - "traefik.http.services.app.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_public"
+
+  backend:
+    image: zbarbe-backend:production-fixed-20250923-183549
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br
+    labels:
+      - "traefik.enable=true"
+      # Backend com prioridade alta
+      - "traefik.http.routers.api.rule=Host(`zbarbe.zenni-ia.com.br`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.priority=100"
+      - "traefik.http.services.api.loadbalancer.server.port=3001"
+      - "traefik.docker.network=network_public"

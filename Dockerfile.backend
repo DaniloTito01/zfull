@@ -1,0 +1,64 @@
+# ==============================================================================
+# BACKEND DOCKERFILE - SISTEMA ZBARBE
+# ==============================================================================
+# Node.js optimized para produção
+# Express API server
+
+# Build stage
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies including dev dependencies for build
+RUN npm install && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Build the application (transpile TypeScript)
+RUN npm run build
+
+# ==============================================================================
+# Production stage
+FROM node:18-alpine
+
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Create app directory
+WORKDIR /app
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+# Copy package files
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm install --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src ./src
+
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs && \
+    chown -R nodejs:nodejs /app && \
+    chmod -R 755 /app/logs
+
+USER nodejs
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:3001/health || exit 1
+
+# Start the application
+CMD ["npm", "start"]

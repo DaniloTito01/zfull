@@ -1,0 +1,39 @@
+# Stack com correções de price.toFixed - 23/09/2025 22:19
+version: '3.8'
+
+services:
+  frontend:
+    image: zbarbe-frontend:20250923-221716
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      - VITE_API_BASE=/api
+      - NODE_ENV=production
+
+  backend:
+    image: zbarbe-backend:20250923-221716
+    ports:
+      - "3001:3001"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db.zenni-ia.com.br:5432/zbarbe_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - BCRYPT_ROUNDS=12
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://zbarbe.zenni-ia.com.br:8080
