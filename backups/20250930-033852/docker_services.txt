@@ -1,0 +1,8 @@
+ID             NAME                       MODE         REPLICAS   IMAGE                                        PORTS
+zw6d62c40rhq   portainer_agent            global       1/1        portainer/agent:2.21.4                       
+g9xvj3qauchr   portainer_portainer        replicated   1/1        portainer/portainer-ce:2.21.4                
+4qqxlprc2rat   postgres_postgres          replicated   1/1        astraonline/postgrespgvector:2025            *:5432->5432/tcp
+28zcjh2pyjr9   traefik_traefik            replicated   1/1        traefik:2.11.2                               
+x2cjr06164zd   zbarbe-frontend_frontend   replicated   1/1        zbarbe-frontend:production-20250930-030347   
+n9fcqd0oy7uf   zbarbe_backend             replicated   1/1        zbarbe-backend:production-20250930-032125    
+els1wxmrg8rg   zbarbe_frontend            replicated   0/1        zbarbe-frontend:production-20250930-022729   

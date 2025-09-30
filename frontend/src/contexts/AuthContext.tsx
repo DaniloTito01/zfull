@@ -29,7 +29,11 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
+<<<<<<< HEAD
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+=======
+const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://api.zbarbe.zenni-ia.com.br/api';
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
@@ -88,7 +92,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         endpoint,
         fullUrl,
         API_BASE_URL,
+<<<<<<< HEAD
         env_VITE_API_URL: import.meta.env.VITE_API_URL,
+=======
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
         env_VITE_API_BASE: import.meta.env.VITE_API_BASE
       });
 

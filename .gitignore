@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
 # Logs
 logs
 *.log
@@ -46,6 +49,7 @@ frontend/*.log
 # Coverage
 coverage/
 .nyc_output/
+<<<<<<< HEAD
 =======
 # Segredos/credenciais
 .ssh/
@@ -93,3 +97,13 @@ Thumbs.db
 .vscode/
 .idea/
 >>>>>>> 6fecff4 (Dump inicial do /root (sanitizado))
+=======
+
+# Database backups (sensitive data)
+backups/*/database_backup.sql
+*.sql
+*.dump
+
+# Production sensitive files
+docker-stack-production.yml
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)

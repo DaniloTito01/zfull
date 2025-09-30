@@ -1,0 +1,7 @@
+zbarbe-backend                 production-20250930-032125   6afffcceb8d6   17 minutes ago      372MB
+zbarbe-frontend                production-20250930-030347   f7869cd10bb1   34 minutes ago      53.7MB
+zbarbe-frontend                production-20250930-025120   03b852feff69   47 minutes ago      53.7MB
+zbarbe-frontend                production-20250930-022729   de96c4cca5de   About an hour ago   53.7MB
+zbarbe-frontend                production-20250930-022300   8f01b290e4cf   About an hour ago   53.7MB
+zbarbe-frontend                production-20250930-020635   4526784d0ad7   About an hour ago   53.7MB
+zbarbe-backend                 production-20250930-020635   02ac51bbfc6d   2 hours ago         148MB

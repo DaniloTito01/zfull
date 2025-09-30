@@ -1,0 +1,138 @@
+{
+  "system": {
+    "name": "ZBarbe - Sistema de Gestão de Barbearias",
+    "version": "1.0.0",
+    "build_date": "2025-09-30T03:38:52Z",
+    "environment": "production"
+  },
+  "backup": {
+    "date": "2025-09-30T03:38:52Z",
+    "type": "full_system_backup",
+    "location": "/root/projetobarbearia1/backups/20250930-033852/",
+    "includes": [
+      "database_backup.sql",
+      "source_code_backup.tar.gz",
+      "docker_images.txt",
+      "docker_services.txt",
+      "HISTORICO_SISTEMA.md",
+      "VERSION_INFO.json"
+    ]
+  },
+  "infrastructure": {
+    "server": "5.78.113.107",
+    "domains": [
+      "zbarbe.zenni-ia.com.br",
+      "api.zbarbe.zenni-ia.com.br"
+    ],
+    "docker_swarm": true,
+    "ssl_provider": "letsencrypt"
+  },
+  "database": {
+    "engine": "PostgreSQL",
+    "host": "5.78.113.107",
+    "port": 5432,
+    "name": "barber_system",
+    "tables_count": 13,
+    "backup_size_estimate": "Complete schema + data"
+  },
+  "applications": {
+    "frontend": {
+      "framework": "React 18 + TypeScript + Vite",
+      "image": "zbarbe-frontend:production-20250930-030347",
+      "url": "https://zbarbe.zenni-ia.com.br",
+      "status": "active"
+    },
+    "backend": {
+      "framework": "Node.js + Express + TypeScript",
+      "image": "zbarbe-backend:production-20250930-032125",
+      "url": "https://api.zbarbe.zenni-ia.com.br",
+      "status": "active"
+    }
+  },
+  "features": {
+    "multi_tenant": true,
+    "authentication": "JWT",
+    "roles": ["super_admin", "admin", "barbeiro", "atendente"],
+    "modules": [
+      "dashboard",
+      "appointments",
+      "clients",
+      "pdv",
+      "barbers",
+      "services",
+      "products",
+      "sales"
+    ]
+  },
+  "barbershops": [
+    {
+      "id": "92e23c58-0c7c-4fa4-b6c2-a1a0adcc1484",
+      "name": "Barbearia Clássica",
+      "admin_email": "admin@barbeariaclassica.com",
+      "status": "active"
+    },
+    {
+      "id": "75c9d602-0a9b-4375-b55e-d39c0716dee0",
+      "name": "Corte & Estilo",
+      "admin_email": "admin@corteestilo.com",
+      "status": "active"
+    }
+  ],
+  "super_admin": {
+    "email": "admin@zbarbe.com",
+    "status": "active"
+  },
+  "deployment": {
+    "method": "docker_swarm",
+    "orchestration_files": [
+      "docker-stack-production.yml",
+      "docker-stack-frontend-simple.yml"
+    ],
+    "proxy": "traefik",
+    "ssl": "automatic"
+  },
+  "changelog": [
+    {
+      "date": "2025-09-30T03:21:25Z",
+      "version": "1.0.0",
+      "changes": [
+        "Correção do campo is_active no response do login",
+        "Sistema completamente operacional",
+        "Todas as barbearias funcionando"
+      ]
+    },
+    {
+      "date": "2025-09-30T03:03:47Z",
+      "version": "0.9.9",
+      "changes": [
+        "Correção de URLs localhost no frontend",
+        "Limpeza completa de cache",
+        "Nova build sem cache"
+      ]
+    },
+    {
+      "date": "2025-09-30T02:06:35Z",
+      "version": "0.9.8",
+      "changes": [
+        "Correção de labels Traefik",
+        "Deploy em produção funcional",
+        "APIs respondendo corretamente"
+      ]
+    },
+    {
+      "date": "2025-09-30T01:00:00Z",
+      "version": "0.9.0",
+      "changes": [
+        "Setup inicial do ambiente de produção",
+        "Criação do banco de dados",
+        "Deploy inicial"
+      ]
+    }
+  ],
+  "next_steps": [
+    "Monitoramento de performance",
+    "Backup automático agendado",
+    "Logs centralizados",
+    "Métricas de uso"
+  ]
+}

@@ -1,0 +1,49 @@
+version: '3.8'
+
+networks:
+  network_public:
+    external: true
+
+services:
+  frontend:
+    image: zbarbe-frontend:production-20250930-030347
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_public"
+
+        # HTTP to HTTPS redirect
+        - "traefik.http.routers.zbarbe-frontend-http.entrypoints=web"
+        - "traefik.http.routers.zbarbe-frontend-http.rule=Host(`zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.zbarbe-frontend-http.middlewares=redirect-to-https"
+
+        # HTTPS router
+        - "traefik.http.routers.zbarbe-frontend.entrypoints=websecure"
+        - "traefik.http.routers.zbarbe-frontend.rule=Host(`zbarbe.zenni-ia.com.br`)"
+        - "traefik.http.routers.zbarbe-frontend.tls=true"
+        - "traefik.http.routers.zbarbe-frontend.tls.certresolver=letsencryptresolver"
+
+        # Service
+        - "traefik.http.services.zbarbe-frontend.loadbalancer.server.port=80"
+
+        # Middleware for HTTPS redirect
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+    environment:
+      - VITE_API_BASE=https://api.zbarbe.zenni-ia.com.br
+      - NODE_ENV=production

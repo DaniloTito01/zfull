@@ -105,7 +105,12 @@ router.post('/login', async (req, res) => {
           role: user.role,
           barbershop: {
             id: user.barbershop_id,
+<<<<<<< HEAD
             name: user.barbershop_name
+=======
+            name: user.barbershop_name,
+            is_active: user.barbershop_is_active
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
           }
         }
       }

@@ -1,7 +1,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Zbarba
 =======
+=======
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
 # 🏆 Sistema de Barbearia - ZBarbe
 
 ![ZBarbe Logo](https://img.shields.io/badge/ZBarbe-Sistema%20Completo-purple?style=for-the-badge&logo=scissors)
@@ -15,11 +18,19 @@ Desenvolvido com tecnologias de ponta e funcionalidades profissionais.
 
 ## 🚀 Acesso Rápido
 
+<<<<<<< HEAD
 **🌐 Ambiente de Produção:** https://******.*******-ia.********.br/
 
 **🔐 Credenciais de Teste:**
 - **Email:** ***********@teste.com
 - **Senha:** *************
+=======
+**🌐 Ambiente de Produção:** https://zbarbe.zenni-ia.com.br/
+
+**🔐 Credenciais de Teste:**
+- **Email:** admin@teste.com
+- **Senha:** admin123
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
 
 ---
 
@@ -517,8 +528,12 @@ Desenvolvido com ❤️ usando tecnologias de ponta para revolucionar a gestão 
 ---
 
 *Última atualização: 23 de Setembro de 2025*
+<<<<<<< HEAD
 *Versão: sistema-completo-20250923-153000*
 >>>>>>> c9963aa (Primeiro commit do projeto barbearia)
 =======
 # zfull
 >>>>>>> 6fecff4 (Dump inicial do /root (sanitizado))
+=======
+*Versão: sistema-completo-20250923-153000*
+>>>>>>> beb8a79 (🚀 Initial commit - ZBarbe Sistema de Gestão de Barbearias)
